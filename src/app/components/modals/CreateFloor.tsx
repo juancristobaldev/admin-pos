@@ -40,20 +40,17 @@ interface CreateFloorModalProps {
   open: boolean;
   onClose: () => void;
   businessId: string; // Necesitamos saber a qué negocio agregar el piso
-  onSuccess: () => void; // Para recargar el mapa o mostrar notificación
 }
 
 export const CreateFloorModal: React.FC<CreateFloorModalProps> = ({
   open,
   onClose,
   businessId,
-  onSuccess,
 }) => {
   // Hook de Apollo para la mutación
   const [createFloor, { loading, error }] = useMutation(CREATE_FLOOR_MUTATION, {
     onCompleted: () => {
       formik.resetForm();
-      onSuccess(); // Refrescar datos del padre
       onClose(); // Cerrar modal
     },
     onError: (err) => {

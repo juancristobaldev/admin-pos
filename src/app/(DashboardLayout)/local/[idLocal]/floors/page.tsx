@@ -16,6 +16,8 @@ import { IconDeviceFloppy, IconPlus, IconLayout } from "@tabler/icons-react";
 import ParentCard from "@/app/components/shared/ParentCard";
 import { useBusiness } from "@/store/bussines"; // Asegúrate que la ruta sea correcta (bussines vs business)
 import FloorPlanEditor from "@/app/components/edit-tables/FloorPlanEdit"; // Asumo que este componente acepta 'tables' y 'onTablesChange'
+import { open } from "node:inspector/promises";
+import { CreateFloorModal } from "@/app/components/modals/CreateFloor";
 
 // --- TIPOS ---
 export type ShapeType =
@@ -121,7 +123,13 @@ const TablesPlane = () => {
     >
       <Grid container spacing={3}>
         {/* MODAL PARA CREAR PISO */}
-
+        {openCreateFloor && (
+          <CreateFloorModal
+            open={openCreateFloor}
+            businessId={business?.id || ""}
+            onClose={() => setOpenCreateFloor(false)}
+          />
+        )}
         {/* COLUMNA IZQUIERDA: EDITOR GRÁFICO */}
         <Grid item xs={12} lg={9}>
           {!business?.floors?.length ? (
