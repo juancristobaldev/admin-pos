@@ -1,6 +1,6 @@
 // src/components/Forms/CreateProductForm.tsx
 
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Button,
@@ -34,13 +34,12 @@ const PRODUCT_CATEGORIES = [
 const CREATE_PRODUCT_MUTATION = gql`
   mutation CreateProduct($input: CreateProductInput!) {
     createProduct(input: $input) {
-      id
+   id
       name
       price
       category
       available
-      description
-    }
+      description}
   }
 `;
 
@@ -86,6 +85,9 @@ const CreateProductForm = () => {
     initialValues: initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values, { resetForm }) => {
+
+      console.log(values)
+      alert(values)
       // 1. Preparar los datos para la mutación
       const finalInput = {
         ...values,
@@ -95,6 +97,7 @@ const CreateProductForm = () => {
 
       try {
         // 2. Ejecutar la mutación GraphQL
+        console.log(finalInput)
         await createProduct({
           variables: { input: finalInput },
           // Opcional: Refetch de la lista de productos para actualizar la tabla
@@ -112,20 +115,27 @@ const CreateProductForm = () => {
     },
   });
 
+  useEffect(() =>{
+    console.log(formik.values)
+  },[formik.values])
+
   const currentDate = new Date().toLocaleDateString("es-CL");
 
   return (
     <BlankCard>
       <CardContent>
         <Typography variant="h4" fontWeight="700" mb={1}>
-          Detalles del Producto
+          Crear Producto
         </Typography>
         <Typography variant="subtitle2" color="textSecondary" mb={3}>
           Para cambiar los detalles del producto, rellena el formulario.
         </Typography>
         <Divider sx={{ mb: 3 }} />
 
-        <form onSubmit={formik.handleSubmit}>
+        <form onSubmit={() =>{
+          console.log(formik.values)
+          formik.handleSubmit()
+        }}>
           <Grid container spacing={3}>
             {/* Campo 1: Nombre del Producto */}
             <Grid item xs={12} sm={6}>

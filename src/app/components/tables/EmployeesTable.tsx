@@ -34,11 +34,17 @@ import {
   IconMail,
   IconUserCheck,
   IconClock,
+  IconDots,
+  IconEdit,
+  IconTrash,
 } from "@tabler/icons-react";
 import { useQuery } from "@apollo/client";
 
 import { User } from "@/entitys"; // Asumiendo que User entity está tipada
 import { useBusiness } from "@/store/bussines";
+import { ListItemIcon, Menu, MenuItem } from "@mui/material";
+import { useRouter } from "next/navigation";
+import DeleteUserModal from "../forms/form-horizontal/ModalDeleteUser";
 
 // NOTA: Usaremos un businessId simulado. En producción, vendría del Contexto de la sesión.
 const SIMULATED_BUSINESS_ID = "b-123456";
@@ -64,14 +70,18 @@ const EmployeesCard = () => {
   // Usamos Apollo useQuery para traer los datos del backend
 
   const { business } = useBusiness();
-  const { data, loading, error } = useQuery<{
+  const { data, loading, error, refetch } = useQuery<{
     usersByBusiness: EmployeeType[];
   }>(GET_USERS_BY_BUSINESS, {
     variables: { businessId: business?.id },
     fetchPolicy: "cache-and-network",
   });
-
+  const [openDelete,setOpenDelete] = useState<boolean>(false)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const open = Boolean(anchorEl);
   const [search, setSearch] = useState("");
+  const router = useRouter();
   const employees: EmployeeType[] = data?.usersByBusiness || [];
 
   const filterEmployees = (emp: EmployeeType[], cSearch: string) => {
@@ -89,6 +99,38 @@ const EmployeesCard = () => {
     [employees, search]
   );
 
+
+   const handleClick = (
+      event: React.MouseEvent<HTMLButtonElement>,
+      id: string
+    ) => {
+      setAnchorEl(event.currentTarget);
+      setSelectedId(id);
+    };
+  
+
+  
+    const handleClose = () => {
+      setAnchorEl(null);
+      setSelectedId(null);
+    };
+  
+    const handleEdit = (id:any) => {
+        router.push(`/local/${business?.id}/employees/edit?userId=${id}`)
+      handleClose();
+    };
+  
+    const handleDelete = () => {
+      console.log("Eliminando empleado:", selectedId);
+      if (!selectedId) return; // Validación de seguridad
+  
+
+  
+      // Llamada a la mutación con las variables requeridas
+      setOpenDelete(true)
+  
+    };
+
   if (loading) return <Typography>Cargando empleados...</Typography>;
   if (error)
     return (
@@ -103,6 +145,8 @@ const EmployeesCard = () => {
       </Typography>
     );
 
+
+    
   return (
     <>
       <Grid container spacing={3}>
@@ -196,6 +240,40 @@ const EmployeesCard = () => {
                       color={statusColor}
                       size="small"
                     />
+                       <IconButton onClick={(e) => handleClick(e, profile.id)}>
+                      <IconDots width={18} />
+                    </IconButton>
+                    <Menu
+                      anchorEl={anchorEl}
+                      open={open && selectedId === profile.id} // Solo abre el menú del ítem seleccionado
+                      onClose={handleClose}
+                    >
+                      <MenuItem onClick={() => handleEdit(selectedId)}>
+                        <ListItemIcon>
+                          <IconEdit width={18} />
+                        </ListItemIcon>
+                        Editar
+                      </MenuItem>
+                      <MenuItem
+                        onClick={handleDelete}
+                        sx={{ color: "error.main" }}
+                      >
+                        <ListItemIcon>
+                          <IconTrash width={18} color="#FA896B" />
+                        </ListItemIcon>
+                        Eliminar
+                      </MenuItem>
+
+                      <DeleteUserModal
+                        open={openDelete}
+                        userId={profile.id}
+                        userName={profile.name}
+                        onClose={() => setOpenDelete(false)}
+                        onDeleted={() => {
+                          refetch(); // o navegación / toast
+                        }}
+                      />
+                    </Menu>
                   </Stack>
                 </Box>
                 <Divider />

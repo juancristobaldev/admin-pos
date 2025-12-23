@@ -20,7 +20,7 @@ const TablesPlane = ({ children }: { children: React.ReactElement }) => {
   const location = usePathname();
   const [value, setValue] = useState(location);
 
-  const handleChange = () => {};
+
 
   const ProfileTabs = [
     {
@@ -35,12 +35,15 @@ const TablesPlane = ({ children }: { children: React.ReactElement }) => {
       to: `/local/${business?.id}/inventory/create`,
       disabled: false,
     },
-    {
+/**
+ * 
+ *     {
       label: "Editar producto",
       icon: <IconHeart size="20" />,
       to: `/local/${business?.id}/inventory/edit`,
-      disabled: true,
+      disabled: false,
     },
+ */
   ];
 
   return (
@@ -48,7 +51,7 @@ const TablesPlane = ({ children }: { children: React.ReactElement }) => {
       {!location.includes("edit") ? (
         <Tabs
           value={value}
-          onChange={handleChange}
+         
           variant="scrollable"
           allowScrollButtonsMobile
           aria-label="scrollable prevent tabs example"
@@ -56,6 +59,11 @@ const TablesPlane = ({ children }: { children: React.ReactElement }) => {
           {ProfileTabs.map((tab) => {
             return (
               <Tab
+                onClick={( ) => {
+                  console.log(tab)
+                  setValue(tab.to)
+                }
+                }
                 iconPosition="start"
                 label={tab.label}
                 sx={{ minHeight: "50px" }}

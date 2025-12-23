@@ -69,7 +69,7 @@ interface Product {
   // imageUrl?: string; // Si decides agregar imágenes en el futuro
 }
 
-const ProductTable = ({ businessId }: { businessId: string | string[] }) => {
+const ProductTable = ({ businessId }: { businessId: any }) => {
   // 1. Hook de Apollo para traer datos reales
 
   const [

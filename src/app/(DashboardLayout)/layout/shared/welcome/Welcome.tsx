@@ -25,22 +25,7 @@ const Welcome = () => {
 
   return (
     <React.Fragment>
-      <Snackbar
-        open={open}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        autoHideDuration={6000}
-        onClose={handleClose}
-      >
-        <Alert
-          onClose={handleClose}
-          severity="info"
-          variant="filled"
-          sx={{ width: '100%', color: 'white' }}
-        >
-          <AlertTitle>Welcome To Modernize</AlertTitle>
-          Easy to customize the Template!!!
-        </Alert>
-      </Snackbar>
+
     </React.Fragment>
   );
 };

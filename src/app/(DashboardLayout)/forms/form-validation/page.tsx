@@ -1,6 +1,6 @@
 "use client";
 
-import { CardContent, Grid } from "@mui/material";
+import { CardContent, Grid, Typography } from "@mui/material";
 
 // common components
 import PageContainer from "@/app/components/container/PageContainer";
@@ -36,7 +36,8 @@ const FormValidation = () => {
         <Grid item xs={12} sm={6}>
           <BlankCard>
             <CardContent sx={{ pt: 0 }}>
-              <Logo />
+    
+
               <FVRegister />
             </CardContent>
           </BlankCard>
@@ -44,7 +45,9 @@ const FormValidation = () => {
         <Grid item xs={12} sm={6}>
           <BlankCard>
             <CardContent sx={{ pt: 0 }}>
-              <Logo />
+            <Typography fontWeight={500}>
+                      EasyFlow
+                    </Typography>
               <FVLogin />
             </CardContent>
           </BlankCard>

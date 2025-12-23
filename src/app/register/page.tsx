@@ -72,7 +72,7 @@ import { gql, useMutation } from "@apollo/client";
 
 export default function Register() {
   return (
-    <PageContainer title="Register Page" description="this is Sample page">
+    <PageContainer title="Registro" description="Crea una cuenta">
       <Grid
         container
         spacing={0}
@@ -91,10 +91,10 @@ export default function Register() {
         >
           <Box p={4}>
             <AuthRegister
-              title="Welcome to Modernize"
+              title="Bienvenido a Easy Flow"
               subtext={
                 <Typography variant="subtitle1" color="textSecondary" mb={1}>
-                  Your Admin Dashboard
+                  Gestiona todo desde un solo panel
                 </Typography>
               }
               subtitle={
@@ -104,7 +104,7 @@ export default function Register() {
                     variant="h6"
                     fontWeight="400"
                   >
-                    Already have an Account?
+                    ¿Ya tienes una cuenta?
                   </Typography>
                   <Typography
                     component={Link}
@@ -115,7 +115,7 @@ export default function Register() {
                       color: "primary.main",
                     }}
                   >
-                    Sign In
+                    Iniciar
                   </Typography>
                 </Stack>
               }

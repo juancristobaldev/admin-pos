@@ -8,6 +8,7 @@ import Logo from "@/app/(DashboardLayout)/layout/shared/logo/Logo"
 import DemosDD from './DemosDD';
 import AppLinks from '@/app/(DashboardLayout)/layout/vertical/header/AppLinks';
 import QuickLinks from '@/app/(DashboardLayout)/layout/vertical/header/QuickLinks';
+import { Typography } from '@mui/material';
 
 const MobileSidebar = () => {
     const [toggle, setToggle] = useState(false)
@@ -16,7 +17,9 @@ const MobileSidebar = () => {
     return (
         <>
             <Box px={3}>
-                <Logo />
+            <Typography fontWeight={500}>
+                      EasyFlow
+                    </Typography>
             </Box>
             <Box p={3}>
 

@@ -215,3 +215,15 @@ export interface SyncLog {
   dataJson: string; // Stringified JSON
   createdAt: Date;
 }
+
+export interface ProductType {
+  id: string;
+  businessId: string;
+  name: string;
+  description: string;
+  price: number;
+  available: boolean;
+  category: string;
+  createdAt: string;
+  updatedAt: string;
+}

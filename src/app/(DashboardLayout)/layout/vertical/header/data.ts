@@ -61,6 +61,16 @@ interface ProfileType {
 const profile: ProfileType[] = [
   {
     href: "/apps/user-profile/profile",
+    title: "Editar perfil",
+    subtitle: "Configuraciones",
+    icon: "/images/svgs/icon-account.svg",
+  },
+];
+/*
+
+const profile: ProfileType[] = [
+  {
+    href: "/apps/user-profile/profile",
     title: "My Profile",
     subtitle: "Account Settings",
     icon: "/images/svgs/icon-account.svg",
@@ -78,6 +88,7 @@ const profile: ProfileType[] = [
     icon: "/images/svgs/icon-tasks.svg",
   },
 ];
+*/
 
 // apps dropdown
 

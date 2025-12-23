@@ -1,7 +1,5 @@
 "use client";
 
-// src/components/Forms/CreateProductForm.tsx
-
 import React from "react";
 import {
   Box,
@@ -24,7 +22,7 @@ import { useMutation, gql } from "@apollo/client";
 import BlankCard from "@/app/components/shared/BlankCard";
 import { useBusiness } from "@/store/bussines";
 
-// --- CATEGORÍAS DISPONIBLES (Ejemplo) ---
+// --- CATEGORÍAS ---
 const PRODUCT_CATEGORIES = [
   "Plato Fuerte",
   "Entradas",
@@ -33,261 +31,182 @@ const PRODUCT_CATEGORIES = [
   "Sandwich",
 ];
 
-// --- DEFINICIÓN DE LA MUTACIÓN (Frontend) ---
+// --- MUTATION ---
 const CREATE_PRODUCT_MUTATION = gql`
   mutation CreateProduct($input: CreateProductInput!) {
     createProduct(input: $input) {
-      id
-      name
-      price
-      category
-      available
-      description
+      errors
+      success
+      product {
+        id
+        name
+        price
+        category
+        available
+        description
+      }
     }
   }
 `;
 
-// --- ESQUEMA DE VALIDACIÓN (yup) ---
+// --- VALIDATION ---
 const validationSchema = yup.object({
-  name: yup.string().required("El nombre del producto es obligatorio."),
-  description: yup.string().required("La descripción es obligatoria."),
-  category: yup.string().required("La categoría es obligatoria."),
+  name: yup.string().required("El nombre es obligatorio"),
+  description: yup.string().required("La descripción es obligatoria"),
+  category: yup.string().required("La categoría es obligatoria"),
   price: yup
     .number()
-    .min(0.01, "El precio debe ser mayor a 0.")
-    .required("El precio es obligatorio.")
-    .typeError("Debe ser un número válido."),
-  available: yup.string().required("Debe definir la disponibilidad."),
-  businessId: yup.string().required("El ID del negocio es requerido."),
+    .min(1, "El precio debe ser mayor a 0")
+    .required("El precio es obligatorio"),
+  available: yup.string().required(),
+  businessId: yup.string().required(),
 });
 
-// Interfaz para los datos del formulario (Coincide con la mutación CreateProductInput)
 interface ProductFormValues {
   name: string;
   description: string;
   category: string;
   price: number;
-  available: string; // Usamos string para el Select ('true'/'false')
+  available: string;
   businessId: string;
 }
 
-// Componente principal
 const CreateProductForm = () => {
+  const { business } = useBusiness();
   const [createProduct, { loading }] = useMutation(CREATE_PRODUCT_MUTATION);
 
-  const { business } = useBusiness();
-
-  const initialValues: ProductFormValues = {
-    name: "",
-    description: "",
-    category: "",
-    price: 0.0,
-    available: "true",
-    businessId: business?.id || "",
-  };
-
-  const formik = useFormik({
-    initialValues: initialValues,
-    validationSchema: validationSchema,
+  const formik = useFormik<ProductFormValues>({
+    enableReinitialize: true, // 🔑 CLAVE
+    initialValues: {
+      name: "",
+      description: "",
+      category: "",
+      price: 0,
+      available: "true",
+      businessId: business?.id ?? "",
+    },
+    validationSchema,
     onSubmit: async (values, { resetForm }) => {
-      // 1. Preparar los datos para la mutación
-      const finalInput = {
-        ...values,
-        available: values.available === "true", // Convertir a boolean
-        price: parseFloat(values.price.toFixed(2)),
-      };
-
-      alert(`finalInput: ${JSON.stringify(finalInput)}`);
-      console.log(finalInput);
       try {
-        // 2. Ejecutar la mutación GraphQL
-        await createProduct({
-          variables: { input: finalInput },
-          // Opcional: Refetch de la lista de productos para actualizar la tabla
-          // refetchQueries: [{ query: GET_PRODUCTS }]
+        const input = {
+          ...values,
+          available: values.available === "true",
+          price: Number(values.price),
+        };
+
+        console.log("🚀 Enviando mutation:", input);
+
+        const { data } = await createProduct({
+          variables: { input },
         });
 
-        alert(`✅ Producto "${finalInput.name}" creado exitosamente.`);
-        resetForm(); // Limpiar el formulario
-      } catch (error) {
-        console.error("Error al crear producto:", error);
-        alert(
-          "❌ Error al crear producto. Verifique la conexión o el ID del negocio."
-        );
+        if (data.createProduct.errors) {
+          alert("❌ Producto ya existe");
+          return;
+        }
+
+        alert(`✅ Producto "${data.createProduct.product.name}" creado`);
+        resetForm();
+      } catch (err) {
+        console.error(err);
+        alert("❌ Error al crear producto");
       }
     },
   });
 
-  const currentDate = new Date().toLocaleDateString("es-CL");
-
   return (
     <BlankCard>
       <CardContent>
-        <Typography variant="h4" fontWeight="700" mb={1}>
-          Detalles del Producto
+        <Typography variant="h4" fontWeight="700">
+          Crear producto
         </Typography>
-        <Typography variant="subtitle2" color="textSecondary" mb={3}>
-          Para cambiar los detalles del producto, rellena el formulario.
-        </Typography>
-        <Divider sx={{ mb: 3 }} />
 
-        <Grid container spacing={3}>
-          {/* Campo 1: Nombre del Producto */}
-          <Grid item xs={12} sm={6}>
-            <TextField
-              id="name"
-              name="name"
-              label="Nombre del Producto"
-              value={formik.values.name}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.name && Boolean(formik.errors.name)}
-              helperText={formik.touched.name && formik.errors.name}
-              fullWidth
-              variant="outlined"
-            />
-          </Grid>
+        <Divider sx={{ my: 3 }} />
 
-          {/* Campo 2: Descripción */}
-
-          {/* Campo 3: Categoría (Select) */}
-          <Grid item xs={12} sm={6}>
-            <FormControl
-              fullWidth
-              variant="outlined"
-              error={formik.touched.category && Boolean(formik.errors.category)}
-            >
-              <InputLabel id="category-label">Categoría</InputLabel>
-              <Select
-                labelId="category-label"
-                id="category"
-                name="category"
-                label="Categoría"
-                value={formik.values.category}
+        {/* ✅ FORM REAL */}
+        <form onSubmit={formik.handleSubmit}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                name="name"
+                label="Nombre"
+                fullWidth
+                value={formik.values.name}
                 onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              >
-                <MenuItem value="">
-                  <em>Seleccione una categoría</em>
-                </MenuItem>
-                {PRODUCT_CATEGORIES.map((option) => (
-                  <MenuItem key={option} value={option}>
-                    {option}
-                  </MenuItem>
-                ))}
-              </Select>
-              {formik.touched.category && formik.errors.category && (
-                <FormHelperText>{formik.errors.category}</FormHelperText>
-              )}
-            </FormControl>
-          </Grid>
+                error={Boolean(formik.touched.name && formik.errors.name)}
+                helperText={formik.touched.name && formik.errors.name}
+              />
+            </Grid>
 
-          {/* Campo 4: Estado / Disponibilidad (Select) */}
-          <Grid item xs={12} sm={6}>
-            <FormControl
-              fullWidth
-              variant="outlined"
-              error={
-                formik.touched.available && Boolean(formik.errors.available)
-              }
-            >
-              <InputLabel id="available-label">Estado</InputLabel>
-              <Select
-                labelId="available-label"
-                id="available"
-                name="available"
-                label="Estado"
-                value={formik.values.available}
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth>
+                <InputLabel>Categoría</InputLabel>
+                <Select
+                  name="category"
+                  value={formik.values.category}
+                  onChange={formik.handleChange}
+                >
+                  {PRODUCT_CATEGORIES.map((cat) => (
+                    <MenuItem key={cat} value={cat}>
+                      {cat}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <FormHelperText>
+                  {formik.touched.category && formik.errors.category}
+                </FormHelperText>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <TextField
+                name="price"
+                label="Precio"
+                type="number"
+                fullWidth
+                value={formik.values.price}
                 onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              >
-                <MenuItem value="true">Disponible</MenuItem>
-                <MenuItem value="false">Agotado (Offline)</MenuItem>
-              </Select>
-              {formik.touched.available && formik.errors.available && (
-                <FormHelperText>{formik.errors.available}</FormHelperText>
-              )}
-            </FormControl>
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth>
+                <InputLabel>Estado</InputLabel>
+                <Select
+                  name="available"
+                  value={formik.values.available}
+                  onChange={formik.handleChange}
+                >
+                  <MenuItem value="true">Disponible</MenuItem>
+                  <MenuItem value="false">Agotado</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                name="description"
+                label="Descripción"
+                fullWidth
+                multiline
+                rows={2}
+                value={formik.values.description}
+                onChange={formik.handleChange}
+              />
+            </Grid>
           </Grid>
 
-          {/* Campo 5: Precio */}
-          <Grid item xs={12} sm={6}>
-            <TextField
-              id="price"
-              name="price"
-              label="Precio ($)"
-              value={formik.values.price}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.price && Boolean(formik.errors.price)}
-              helperText={formik.touched.price && formik.errors.price}
-              fullWidth
-              variant="outlined"
-              type="number"
-              inputProps={{ step: "0.01" }}
-            />
-          </Grid>
-
-          {/* Campo 6: Fecha de Creación (Solo Lectura) */}
-          <Grid item xs={12} sm={6}>
-            <TextField
-              id="creation-date"
-              label="Fecha de Creación"
-              value={currentDate}
-              fullWidth
-              variant="outlined"
-              disabled
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              id="update-date"
-              label="Última Actualización"
-              value="N/A (Se asigna al actualizar)"
-              fullWidth
-              variant="outlined"
-              disabled
-            />
-          </Grid>
-          <Grid item xs={12} sm={12}>
-            <TextField
-              id="description"
-              name="description"
-              label="Descripción del producto"
-              value={formik.values.description}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched.description && Boolean(formik.errors.description)
-              }
-              helperText={
-                formik.touched.description && formik.errors.description
-              }
-              fullWidth
-              multiline
-              rows={1}
-              variant="outlined"
-            />
-          </Grid>
-
-          {/* Campo 7: Última Actualización (Solo Lectura) */}
-        </Grid>
-
-        {/* Botón de Envío */}
-        <Box mt={3} display="flex" justifyContent="flex-end">
-          <Button
-            color="primary"
-            variant="contained"
-            onClick={() => {
-              alert("hola");
-              formik.handleSubmit();
-            }}
-            startIcon={<IconDeviceFloppy />}
-            disabled={loading || formik.isSubmitting}
-          >
-            {loading ? "Creando..." : "Crear Producto"}
-          </Button>
-        </Box>
+          <Box mt={3} display="flex" justifyContent="flex-end">
+            <Button
+              type="submit"
+              variant="contained"
+              startIcon={<IconDeviceFloppy />}
+              disabled={loading}
+            >
+              {loading ? "Creando..." : "Crear Producto"}
+            </Button>
+          </Box>
+        </form>
       </CardContent>
     </BlankCard>
   );

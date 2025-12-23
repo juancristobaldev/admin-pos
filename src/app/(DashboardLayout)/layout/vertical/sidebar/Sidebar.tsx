@@ -12,6 +12,7 @@ import {
 import Scrollbar from "@/app/components/custom-scroll/Scrollbar";
 import { Profile } from "./SidebarProfile/Profile";
 import { AppState } from "@/store/store";
+import { Typography } from "@mui/material";
 
 const Sidebar = () => {
   const lgUp = useMediaQuery((theme: any) => theme.breakpoints.down("lg"));
@@ -77,7 +78,9 @@ const Sidebar = () => {
               {/* Logo */}
               {/* ------------------------------------------- */}
               <Box px={3}>
-                <Logo />
+              <Typography fontWeight={500}>
+                      EasyFlow
+                    </Typography>
               </Box>
               <Scrollbar sx={{ height: "calc(100% - 190px)" }}>
                 {/* ------------------------------------------- */}
@@ -107,7 +110,9 @@ const Sidebar = () => {
           {/* Logo */}
           {/* ------------------------------------------- */}
           <Box px={2}>
-            <Logo />
+          <Typography fontWeight={500}>
+                      EasyFlow
+                    </Typography>
           </Box>
           {/* ------------------------------------------- */}
           {/* Sidebar For Mobile */}

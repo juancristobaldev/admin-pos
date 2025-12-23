@@ -5,8 +5,8 @@ import "./global.css";
 import { ClientProvider } from "@/store/me";
 
 export const metadata = {
-  title: "Modernize Main Demo",
-  description: "Modernize Main kit",
+  title: "Easy Flow",
+  description: "Easy Flow",
 };
 
 export default function RootLayout({

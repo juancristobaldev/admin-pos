@@ -13,6 +13,7 @@ import Logo from "@/app/(DashboardLayout)/layout/shared/logo/Logo";
 import Navigations from "./Navigations";
 import MobileSidebar from "./MobileSidebar";
 import { IconMenu2 } from "@tabler/icons-react";
+import { Typography } from "@mui/material";
 
 const LpHeader = () => {
   const AppBarStyled = styled(AppBar)(({ theme }) => ({
@@ -48,7 +49,9 @@ const LpHeader = () => {
     <AppBarStyled position="sticky" elevation={8}>
       <Container maxWidth="lg">
         <ToolbarStyled>
-          <Logo />
+        <Typography variant="title" fontWeight={700}>
+                      <strong>EasyFlow</strong>
+                    </Typography>
           <Box flexGrow={1} />
           {lgDown ? (
             <IconButton

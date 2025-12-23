@@ -11,8 +11,10 @@ import { IconPower } from "@tabler/icons-react";
 import { AppState } from "@/store/store";
 import Link from "next/link";
 import { deleteCookies } from "@/utils/cookies";
+import { useClientContext } from "@/store/me";
 
 export const Profile = () => {
+  const {client} = useClientContext()
   const customizer = useSelector((state: AppState) => state.customizer);
   const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up("lg"));
   const hideMenu = lgUp
@@ -35,8 +37,8 @@ export const Profile = () => {
           />
 
           <Box>
-            <Typography variant="h6">Mathew</Typography>
-            <Typography variant="caption">Designer</Typography>
+            <Typography variant="h6">{client?.name}</Typography>
+            <Typography variant="caption">Administrador</Typography>
           </Box>
           <Box sx={{ ml: "auto" }}>
             <Tooltip title="Logout" placement="top">

@@ -12,10 +12,10 @@ const Footer = () => {
       <Grid container spacing={3} justifyContent="center" mt={4}>
         <Grid item xs={12} sm={5} lg={4} textAlign="center">
           <Typography fontSize="16" color="textSecondary" mt={1} mb={4}>
-            © {new Date().getFullYear()} Modernize. Todos los derechos
+            © {new Date().getFullYear()} Easy Flow. Todos los derechos
             reservados.
             <br />
-            Diseñado y desarrollado por nuestro equipo.
+            Diseñado y desarrollado por Juan Cristobal Quezada.
           </Typography>
         </Grid>
       </Grid>

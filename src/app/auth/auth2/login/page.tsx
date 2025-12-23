@@ -39,13 +39,15 @@ export default function Login2() {
           >
             <Card elevation={9} sx={{ p: 4, zIndex: 1, width: '100%', maxWidth: '450px' }}>
               <Box display="flex" alignItems="center" justifyContent="center">
-                <Logo />
+              <Typography fontWeight={500}>
+                      EasyFlow
+                    </Typography>
               </Box>
               <AuthLogin
                 subtitle={
                   <Stack direction="row" spacing={1} justifyContent="center" mt={3}>
                     <Typography color="textSecondary" variant="h6" fontWeight="500">
-                      New to Modernize?
+                      Nuevo en Easy Flow
                     </Typography>
                     <Typography
                       component={Link}
@@ -56,7 +58,7 @@ export default function Login2() {
                         color: 'primary.main',
                       }}
                     >
-                      Create an account
+                     Crea una cuenta
                     </Typography>
                   </Stack>
                 }

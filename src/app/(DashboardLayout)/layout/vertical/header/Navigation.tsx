@@ -5,10 +5,11 @@ import { IconChevronDown, IconHelp } from "@tabler/icons-react";
 import AppLinks from "./AppLinks";
 import QuickLinks from "./QuickLinks";
 import { useParams, usePathname, useSearchParams } from "next/navigation";
+import { useClientContext } from "@/store/me";
 
 const AppDD = () => {
   const [anchorEl2, setAnchorEl2] = useState(null);
-
+  const {client} = useClientContext()
   const handleClick2 = (event: any) => {
     setAnchorEl2(event.currentTarget);
   };
@@ -19,36 +20,38 @@ const AppDD = () => {
 
   const pathname = usePathname();
 
-  const params2 = useParams();
+  const params = useParams<{ idLocal: string }>()
 
-  console.log({ params2 });
+  console.log(params.idLocal);
   const businessMenu = [
     {
       title: "Plano de Mesas",
-      href: `/local/${params2.idLocal}/floors`,
-      active: pathname.includes("/tables") && pathname.includes("/local"),
+      href: `/local/${params.idLocal}/floors`,
+      active: pathname.includes("/floors") && pathname.includes("/local"),
     },
     {
       title: "Inventario",
-      href: `/local/${params2.idLocal}/inventory`,
+      href: `/local/${params.idLocal}/inventory`,
       active: pathname.includes("/inventory") && pathname.includes("/local"),
     },
     {
       title: "Empleados",
-      href: `/local/${params2.idLocal}/employees`,
+      href: `/local/${params.idLocal}/employees`,
       active: pathname.includes("/employees") && pathname.includes("/local"),
     },
     {
       title: "Productos",
-      href: `/local/${params2.idLocal}/products`,
+      href: `/local/${params.idLocal}/products`,
       active: pathname.includes("/products") && pathname.includes("/local"),
     },
     {
       title: "Métricas",
-      href: `/local/${params2.idLocal}/metrics`,
+      href: `/local/${params.idLocal}/metrics`,
       active: pathname.includes("/metrics") && pathname.includes("/local"),
     },
   ];
+
+
 
   // const localsMenu = map de locales
 
@@ -66,8 +69,19 @@ const AppDD = () => {
       </Button>
     ));
 
-  return null;
-};
+  else if(pathname.includes('/admin'))     return client?.businesses?.map((item, index) => (
+    <Button
+      key={index}
+      color="primary"
+      sx={{ color: (theme) => theme.palette.text.secondary }}
+      variant="text"
+      href={`${pathname}?businessId=${item.id}`}
+      component={Link}
+    >
+      {item.name}
+    </Button>
+  ));
+ };
 /*
 
         <Menu

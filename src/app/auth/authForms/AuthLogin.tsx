@@ -98,7 +98,7 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
             position="relative"
             px={2}
           >
-            Ingreso Rápido de Meseros
+            Ingreso de Administradores
           </Typography>
         </Divider>
       </Box>

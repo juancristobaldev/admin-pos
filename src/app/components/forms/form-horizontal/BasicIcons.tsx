@@ -28,9 +28,15 @@ import CustomOutlinedInput from "../theme-elements/CustomOutlinedInput";
 const CREATE_BUSINESS_MUTATION = gql`
   mutation CreateBusiness($input: CreateBusinessInput!) {
     createBusiness(input: $input) {
+      errors
+      success
+      client {
       id
-      name
-      status
+      businesses {
+        id
+        name
+        status
+      }}
     }
   }
 `;
@@ -60,8 +66,11 @@ const CreateBusinessForm = () => {
     CREATE_BUSINESS_MUTATION,
     {
       onCompleted: (data) => {
-        alert(`¡Negocio "${data.createBusiness.name}" creado con éxito!`);
-        // Aquí podrías redirigir: router.push('/dashboard');
+        if(data.createBusiness.success){
+         return  alert(`¡Negocio "${data.createBusiness.name}" creado con éxito!`)
+        } else if(data.createBusiness.errors === 
+          "BUSSINESS SAME NAME")
+       return  alert('ya existe un local con este nombre')
       },
       onError: (err) => {
         console.error("Error al crear negocio:", err);

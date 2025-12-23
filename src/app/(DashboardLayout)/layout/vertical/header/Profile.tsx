@@ -15,9 +15,11 @@ import { IconMail } from "@tabler/icons-react";
 import { Stack } from "@mui/system";
 import Image from "next/image";
 import { deleteCookies } from "@/utils/cookies";
+import { useClientContext } from "@/store/me";
 
 const Profile = () => {
   const [anchorEl2, setAnchorEl2] = useState(null);
+  const {client} = useClientContext()
   const handleClick2 = (event: any) => {
     setAnchorEl2(event.currentTarget);
   };
@@ -67,12 +69,12 @@ const Profile = () => {
           },
         }}
       >
-        <Typography variant="h5">User Profile</Typography>
+        <Typography variant="h5">Mi Perfil</Typography>
         <Stack direction="row" py={3} spacing={2} alignItems="center">
           <Avatar
             src={"/images/profile/user-1.jpg"}
             alt={"ProfileImg"}
-            sx={{ width: 95, height: 95 }}
+            sx={{ width: 60, height: 60 }}
           />
           <Box>
             <Typography
@@ -80,21 +82,21 @@ const Profile = () => {
               color="textPrimary"
               fontWeight={600}
             >
-              Mathew Anderson
+              {client?.name}
             </Typography>
             <Typography variant="subtitle2" color="textSecondary">
-              Designer
+              Administrador
             </Typography>
             <Typography
-              variant="subtitle2"
+            className="!text-xs"
               color="textSecondary"
               display="flex"
               alignItems="center"
               gap={1}
             >
               <IconMail width={15} height={15} />
-              info@modernize.com
-            </Typography>
+              {client?.email}
+              </Typography>
           </Box>
         </Stack>
         <Divider />
@@ -152,7 +154,9 @@ const Profile = () => {
           </Box>
         ))}
         <Box mt={2}>
-          <Box
+         
+          {/*
+           <Box
             bgcolor="primary.light"
             p={3}
             mb={3}
@@ -178,7 +182,9 @@ const Profile = () => {
                 className="signup-bg"
               />
             </Box>
-          </Box>
+                     </Box>
+          */}
+ 
           <Button
             onClick={() => {
               deleteCookies("token");
@@ -188,7 +194,7 @@ const Profile = () => {
             color="primary"
             fullWidth
           >
-            Logout
+            Salir
           </Button>
         </Box>
       </Menu>

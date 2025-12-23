@@ -10,7 +10,7 @@ import {
   Stack,
   Container,
 } from "@mui/material";
-import { IconDeviceFloppy, IconPlus, IconLayout } from "@tabler/icons-react";
+import { IconDeviceFloppy, IconPlus, IconLayout, IconTrash } from "@tabler/icons-react";
 
 // Components
 import ParentCard from "@/app/components/shared/ParentCard";
@@ -18,6 +18,7 @@ import { useBusiness } from "@/store/bussines"; // Asegúrate que la ruta sea co
 import FloorPlanEditor from "@/app/components/edit-tables/FloorPlanEdit"; // Asumo que este componente acepta 'tables' y 'onTablesChange'
 import { open } from "node:inspector/promises";
 import { CreateFloorModal } from "@/app/components/modals/CreateFloor";
+import DeleteFloorModal from "@/app/components/forms/form-horizontal/ModalDeleteFloor";
 
 // --- TIPOS ---
 export type ShapeType =
@@ -41,7 +42,7 @@ export interface LocalTableData {
 }
 
 const TablesPlane = () => {
-  const { business, refreshBusiness } = useBusiness(); // Asumo que tienes un refresh en el store
+  const { business } = useBusiness(); // Asumo que tienes un refresh en el store
 
   // 1. ESTADO
   const [selectedFloor, setSelectedFloor] = useState<any | null>(null);
@@ -61,6 +62,7 @@ const TablesPlane = () => {
   // 3. EFECTO: Sincronizar mesas cuando cambia el piso seleccionado
   useEffect(() => {
     if (selectedFloor) {
+      console.log(selectedFloor)
       // Mapeamos las mesas del backend al formato del editor local
       // Aseguramos valores por defecto si vienen null del backend
       const mappedTables: LocalTableData[] = selectedFloor.tables.map(
@@ -81,41 +83,12 @@ const TablesPlane = () => {
     }
   }, [selectedFloor]);
 
-  // 4. LÓGICA: Agregar nueva mesa (Localmente)
-  const handleAddTable = (table: LocalTableData) => {
-    if (!selectedFloor) return;
+  const [modalDelete,setModalDelete] = useState({
+    open: false,
+    floorId: "",
+    floorName: "",
 
-    setTables((prev) => [...prev, table]);
-    setHasChanges(true);
-  };
-
-  // 5. LÓGICA: Guardar Cambios (Mutación)
-  const handleSave = async () => {
-    setLoading(true);
-    try {
-      // AQUÍ IMPLEMENTAS TU MUTACIÓN REAL
-      // await updateTablesMutation({ variables: { tables: tables } });
-
-      console.log("Guardando datos para el piso:", selectedFloor?.name, tables);
-
-      // Simulación
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      setHasChanges(false);
-      // Opcional: refreshBusiness();
-    } catch (error) {
-      console.error("Error al guardar", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 6. LÓGICA: Actualización desde el Hijo (FloorPlanEditor)
-  // Esta función se pasa al componente hijo para que actualice el estado del padre al arrastrar
-  const handleTablesUpdate = (updatedTables: LocalTableData[]) => {
-    setTables(updatedTables);
-    setHasChanges(true);
-  };
+  })
 
   return (
     <ParentCard
@@ -155,15 +128,7 @@ const TablesPlane = () => {
                 Crea tu primer plano (ej: Salón, Terraza) para comenzar a
                 colocar mesas.
               </Typography>
-              <Button
-                onClick={() => setOpenCreateFloor(true)}
-                color="primary"
-                variant="contained"
-                size="large"
-                disableElevation
-              >
-                Crear mi primer plano
-              </Button>
+         
             </Container>
           ) : (
             // EDITOR ACTIVO
@@ -206,6 +171,7 @@ const TablesPlane = () => {
               <Stack spacing={2}>
                 {business?.floors?.map((floor: any) => (
                   <Paper
+                  className="flex justify-between"
                     key={floor.id}
                     onClick={() => setSelectedFloor(floor)}
                     elevation={selectedFloor?.id === floor.id ? 3 : 1}
@@ -242,6 +208,29 @@ const TablesPlane = () => {
                           {floor.tables?.length || 0} Mesas
                         </Typography>
                       </Box>
+                    </Stack>
+                    <Stack direction="row" alignItems="center" spacing={2}>
+                    <Button onClick={() => {
+                      setModalDelete({
+                        open:true,
+                        floorId:floor.id,
+                        floorName:floor.name
+                      })
+                    }}>
+                      <IconTrash  />
+                    </Button>
+                    <DeleteFloorModal
+                    open={modalDelete.open}
+                    floorId={floor.id}
+                    floorName={floor.name}
+                    onClose={() => {
+                      setModalDelete({
+                        open:false,
+                        floorId:"",
+                        floorName:"",
+                      })
+                    }}
+                    />
                     </Stack>
                   </Paper>
                 ))}

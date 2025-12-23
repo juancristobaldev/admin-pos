@@ -8,112 +8,99 @@ import { IconArrowUpLeft } from "@tabler/icons-react";
 import DashboardCard from "../../shared/DashboardCard";
 import SkeletonMonthlyEarningsCard from "../skeleton/MonthlyEarningsCard";
 
-interface monthlyearningsCardProps {
+// DEFINICIÓN DE PROPS
+interface MonthlyEarningsCardProps {
   isLoading: boolean;
+  totalRevenue?: number;
 }
 
-const MonthlyEarnings = ({ isLoading }: monthlyearningsCardProps) => {
+const MonthlyEarnings = ({ isLoading, totalRevenue = 0 }: MonthlyEarningsCardProps) => {
   // chart color
   const theme = useTheme();
   const primary = theme.palette.primary.main;
   const primarylight = theme.palette.primary.light;
   const successlight = theme.palette.success.light;
 
-  // chart
+  // chart config (Se mantiene visualmente igual)
   const optionscolumnchart: any = {
     chart: {
       type: "area",
       fontFamily: "'Plus Jakarta Sans', sans-serif;",
       foreColor: "#adb0bb",
-      toolbar: {
-        show: false,
-      },
+      toolbar: { show: false },
       height: 70,
-      sparkline: {
-        enabled: true,
-      },
+      sparkline: { enabled: true },
       group: "sparklines",
     },
-    stroke: {
-      curve: "smooth",
-      width: 2,
-    },
-    fill: {
-      colors: [primarylight],
-      type: "solid",
-      opacity: 0.05,
-    },
-    markers: {
-      size: 0,
-    },
+    stroke: { curve: "smooth", width: 2 },
+    fill: { colors: [primarylight], type: "solid", opacity: 0.05 },
+    markers: { size: 0 },
     tooltip: {
       theme: theme.palette.mode === "dark" ? "dark" : "light",
-      x: {
-        show: false,
-      },
+      x: { show: false },
     },
   };
   const seriescolumnchart = [
     {
-      name: "",
+      name: "Ingresos",
       color: primary,
-      data: [25, 66, 20, 40, 12, 58, 20],
+      data: [25, 66, 20, 40, 12, 58, 20], // Datos simulados para la curva estética
     },
   ];
 
   return (
     <>
-      {
-        isLoading ? (
-          <SkeletonMonthlyEarningsCard />
-        ) : (
-          <DashboardCard
-            title="Monthly Earnings"
-            action={
+      {isLoading ? (
+        <SkeletonMonthlyEarningsCard />
+      ) : (
+        <DashboardCard
+          title="Ingresos Totales"
+          action={
+            <Avatar
+              variant="rounded"
+              sx={{
+                bgcolor: (theme) => theme.palette.primary.light,
+                width: 40,
+                height: 40,
+              }}
+            >
               <Avatar
-                variant="rounded"
-                sx={{
-                  bgcolor: (theme) => theme.palette.primary.light,
-                  width: 40,
-                  height: 40,
-                }}
-              >
-                <Avatar
-                  src="/images/svgs/icon-master-card-2.svg"
-                  alt="icon"
-                  sx={{ width: 24, height: 24 }}
-                />
-              </Avatar>
-            }
-            footer={
-              <Box height="70px">
-                <Chart
-                  options={optionscolumnchart}
-                  series={seriescolumnchart}
-                  type="area"
-                  width={"100%"}
-                  height="70px"
-                />
-              </Box>
-            }
-          >
-            <>
-              <Stack direction="row" spacing={1} alignItems="center" mb={3}>
-                <Typography variant="h3" fontWeight="700">
-                  $6,820
+                src="/images/svgs/icon-master-card-2.svg"
+                alt="icon"
+                sx={{ width: 24, height: 24 }}
+              />
+            </Avatar>
+          }
+          footer={
+            <Box height="70px">
+              <Chart
+                options={optionscolumnchart}
+                series={seriescolumnchart}
+                type="area"
+                width={"100%"}
+                height="70px"
+              />
+            </Box>
+          }
+        >
+          <>
+            <Stack direction="row" spacing={1} alignItems="center" mb={3}>
+              <Typography variant="h3" fontWeight="700">
+                {/* DATO REAL AQUI */}
+                ${totalRevenue.toLocaleString()}
+              </Typography>
+              <Stack direction="row" spacing={1} mt={1} mb={2} alignItems="center">
+                <Avatar sx={{ bgcolor: successlight, width: 20, height: 20 }}>
+                  <IconArrowUpLeft width={18} color="#13DEB9" />
+                </Avatar>
+                <Typography variant="subtitle2" color="textSecondary">
+                  +9%
                 </Typography>
-                <Stack direction="row" spacing={1} mt={1} mb={2} alignItems="center">
-                  <Avatar sx={{ bgcolor: successlight, width: 20, height: 20 }}>
-                    <IconArrowUpLeft width={18} color="#13DEB9" />
-                  </Avatar>
-                  <Typography variant="subtitle2" color="textSecondary">
-                    +9%
-                  </Typography>
-                </Stack>
               </Stack>
-            </>
-          </DashboardCard>
-        )}
+            </Stack>
+          </>
+        </DashboardCard>
+      )}
     </>
   );
 };

@@ -13,16 +13,20 @@ import Footer from "@/app/components/landingpage/footer/Footer";
 import Frameworks from "@/app/components/landingpage/frameworks/Frameworks";
 import LpHeader from "@/app/components/landingpage/header/Header";
 import Testimonial from "@/app/components/landingpage/testimonial/Testimonial";
+import PricingPlans from "../components/landingpage/plans/PlanList";
 
 export default function Landingpage() {
   return (
     <PageContainer title="Landingpage" description="this is Landingpage">
       <LpHeader />
+      <div>
       <Banner />
+      </div>
 
       <Frameworks />
       <Features />
-      <C2a2 />
+      <PricingPlans />
+
       <Footer />
 
       {/*

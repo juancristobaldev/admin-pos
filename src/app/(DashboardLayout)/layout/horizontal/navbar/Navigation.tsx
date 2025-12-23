@@ -1,4 +1,4 @@
-import { Theme } from '@mui/material';
+import { Theme, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Drawer from '@mui/material/Drawer';
@@ -50,7 +50,9 @@ const Navigation = () => {
       {/* Logo */}
       {/* ------------------------------------------- */}
       <Box px={2}>
-        <Logo />
+      <Typography fontWeight={500}>
+                      EasyFlow
+                    </Typography>
       </Box>
       {/* ------------------------------------------- */}
       {/* Sidebar For Mobile */}

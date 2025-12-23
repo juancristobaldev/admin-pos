@@ -1,24 +1,23 @@
 "use client";
 
-import Breadcrumb from "@/app/(DashboardLayout)/layout/shared/breadcrumb/Breadcrumb";
 import PageContainer from "@/app/components/container/PageContainer";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
-const BCrumb = [
-  {
-    to: "/",
-    title: "Home",
-  },
-  {
-    title: "Inventory",
-  },
-];
+import { useRouter } from "next/navigation";
+import { useClientContext } from "@/store/me";
+import { useBusiness } from "@/store/bussines";
+import ProductTable from "@/app/components/tables/ProductTable";
 
-const InventoryPage = () => {
+
+
+const Employees = () => {
+  const {business} = useBusiness()
+
+
   return (
-    <PageContainer title="Inventory Page" description="this is Inventory Page">
-      <Breadcrumb title="Inventory Page" items={BCrumb} />
-    </PageContainer>
+<ProductTable businessId={business?.id} />
   );
 };
 
-export default InventoryPage;
+export default Employees;

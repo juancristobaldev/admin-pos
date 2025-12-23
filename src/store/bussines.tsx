@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useQuery, gql } from "@apollo/client";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 
 // 1. DEFINICIÓN DE LA QUERY GRAPHQL
 // Pedimos el Negocio -> Pisos -> Mesas (Todo en un solo viaje)
@@ -74,14 +74,30 @@ const BusinessContext = createContext<BusinessContextProps>(
 export const BusinessProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  const params = useParams();
+  const params = useParams<{
+ idLocal:string
+  }>();
   const idBusiness = params.idLocal;
+  const searchParams = useSearchParams()
+  const businessId = searchParams.get('businessId');
+
+
+  const [id,setId] = useState<string | null>("")
+
+  useEffect(() => {
+    if(businessId)setId(businessId)
+      else if(idBusiness) setId(idBusiness)
+  },[businessId,idBusiness])
+
+
+
+
   const [currentFloor, setCurrentFloor] = useState<Floor | null>(null);
 
   // Ejecutamos la Query
   const { data, loading, error, refetch } = useQuery(GET_BUSINESS_QUERY, {
-    variables: { id: idBusiness },
-    skip: !idBusiness, // No ejecutar si no hay ID
+    variables: { id },
+    skip: !id, // No ejecutar si no hay ID
     fetchPolicy: "network-only", // Para desarrollo rápido, asegura datos frescos
     onCompleted: (data) => {
       // ESTRATEGIA UX:

@@ -33,10 +33,7 @@ const ProfileTabs = [
 ];
 
 const Employees = () => {
-  const location = usePathname();
-  const [value, setValue] = useState(location);
 
-  const handleChange = () => {};
 
   return (
     <BlankCard className="mt-4">

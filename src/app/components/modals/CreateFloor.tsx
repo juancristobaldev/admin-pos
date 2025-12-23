@@ -20,8 +20,11 @@ const CREATE_FLOOR_MUTATION = gql`
   mutation CreateFloor($createFloorInput: CreateFloorInput!) {
     createFloor(createFloorInput: $createFloorInput) {
       id
-      name
-      businessId
+      floors {
+      id
+        name
+      
+      }
     }
   }
 `;

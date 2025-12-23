@@ -64,7 +64,7 @@ const rows = [
     status: 'pending',
     avatar: "/images/profile/user-8.jpg",
     name: 'Isabel Vasquez',
-    project: 'Modernize admin',
+    project: 'Easy Flow admin',
     percent: 32,
     users: [{ img: "/images/profile/user-2.jpg" }, { img: "/images/profile/user-4.jpg" }],
   },

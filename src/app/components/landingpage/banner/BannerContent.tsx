@@ -20,8 +20,9 @@ const BannerContent = () => {
   const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down("lg"));
 
   return (
-    <Box mt={lgDown ? 8 : 0}>
+    <Box  mt={lgDown ? 8 : 0}>
       <motion.div
+      className="max-md:flex max-md:justify-center max-md:flex-col"
         initial={{ opacity: 0, translateY: 550 }}
         animate={{ opacity: 1, translateY: 0 }}
         transition={{
@@ -30,7 +31,7 @@ const BannerContent = () => {
           damping: 30,
         }}
       >
-        <Typography variant="h6" display={"flex"} gap={1} mb={2}>
+        <Typography className="max-md:flex max-md:justify-center" variant="h6" display={"flex"} gap={1} mb={2}>
           <Typography color={"secondary"}>
             <IconRocket size={"21"} />
           </Typography>{" "}
@@ -69,7 +70,7 @@ const BannerContent = () => {
           }}
         >
           <Typography variant="h5" fontWeight={300}>
-            Modernize te ofrece interfaz clara, flujos rápidos y un sistema
+          Easy Flow te ofrece interfaz clara, flujos rápidos y un sistema
             offline-first que nunca te deja botado. Operaciones más ágiles,
             pedidos sin errores y una administración que por fin fluye.
           </Typography>
@@ -85,13 +86,29 @@ const BannerContent = () => {
           delay: 0.4,
         }}
       >
-        <Stack direction={{ xs: "column", sm: "row" }} spacing={2} mt={3}>
+        <Stack sx={{
+  display: {
+    xs: "flex !important",
+    md: "flex !important",
+    lg: "block",
+  },
+  justifyContent: {
+    xs: "center !important",
+    md: "center !important",
+    lg: "flex-start",
+  },
+  textAlign: {
+    xs: "center !important",
+    md: "center !important",
+    lg: "left",
+  },
+}} spacing={2} mt={3}>
           <StyledButton
             variant="contained"
             color="primary"
             href="/auth/auth1/login"
           >
-            {"Empezar"}
+            {"Ver planes"}
           </StyledButton>
 
           <StyledButton variant="outlined" href="#demos">

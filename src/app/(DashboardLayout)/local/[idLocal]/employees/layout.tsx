@@ -34,11 +34,7 @@ const Employees = (props: Props) => {
       icon: <IconHeart size="20" />,
       to: `/local/${business?.id}/employees/create`,
     },
-    {
-      label: "Editar empleado",
-      icon: <IconUserCircle size="20" />,
-      to: `/local/${business?.id}/employees/edit`,
-    },
+  
   ];
   const handleChange = () => {};
 
@@ -54,6 +50,9 @@ const Employees = (props: Props) => {
         {ProfileTabs.map((tab) => {
           return (
             <Tab
+            onClick={() => {
+              setValue(tab.to)
+            }}
               iconPosition="start"
               label={tab.label}
               sx={{ minHeight: "50px" }}

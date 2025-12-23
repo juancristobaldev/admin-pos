@@ -1,7 +1,7 @@
 "use client";
 
 // src/context/ClientContext.jsx
-import React, { createContext, useContext, ReactNode } from "react";
+import React, { createContext, useContext, ReactNode, useState } from "react";
 import {
   useQuery,
   ApolloError,
@@ -77,6 +77,7 @@ export const useClientContext = () => {
 
 // Provider
 export function ClientProvider({ children }: ClientProviderProps) {
+  const [selectedBusiness,setSelectedBusiness] = useState(null)
   const { data, loading, error, refetch } = useQuery(GET_CLIENT_DATA_QUERY, {
     fetchPolicy: "network-only",
   });

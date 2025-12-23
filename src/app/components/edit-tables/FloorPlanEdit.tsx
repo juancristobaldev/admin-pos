@@ -44,6 +44,7 @@ const FloorPlanEditor = (props: Props) => {
 
   // Lógica para detectar el DELTA (qué se creó, qué se movió, qué se borró)
   const getBatchUpdateInput = useMemo(() => {
+
     // Mesas nuevas: Tienen el flag 'isNew'
     const tablesToCreate = tables
       .filter((t) => t.isNew)
@@ -92,6 +93,7 @@ const FloorPlanEditor = (props: Props) => {
       tableIdsToDelete,
     };
   }, [tables, originalTables, props.floor.id]);
+  
 
   // Manejador cuando se suelta una mesa (actualiza el estado local y marca cambios)
   const handleUpdatePosition = (id: string, x: number, y: number) => {
@@ -144,6 +146,16 @@ const FloorPlanEditor = (props: Props) => {
     }
   };
 
+  useEffect(() => {
+    if (!props.floor) return;
+  
+    const floorTables = (props.floor.tables as LocalTableState[]) || [];
+  
+    setTables(floorTables);
+    setOriginalTables(floorTables);
+    setHasChanges(false);
+  }, [props.floor.id]);
+
   // Manejador para agregar una mesa desde la modal
   const handleAddTable = (table: any) => {
     const newTableState: LocalTableState = {
@@ -155,7 +167,7 @@ const FloorPlanEditor = (props: Props) => {
       shape: table.shape || "square",
       color: table.color || "#cccccc",
       capacity: table.capacity || 4,
-      status: "Disponible",
+      status: 'AVAILABLE',
       isNew: true, // Marca como nuevo
     };
 

@@ -44,7 +44,7 @@ const Navigations = () => {
       <StyledButton color="inherit" variant="text" href="/login">
         Ingresar
       </StyledButton>
-      <Button color="primary" variant="contained" href="/register">
+      <Button color="primary" variant="contained" href="#pricing">
         Unirme
       </Button>
     </>

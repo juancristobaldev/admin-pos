@@ -1,81 +1,102 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// 1. Definir las rutas públicas (sin necesidad de token)
-const PUBLIC_FILE_PATH = /\.(.*)$/; // Excluye archivos estáticos (CSS, JS, imágenes)
+/**
+ * Archivos estáticos (css, js, imágenes, etc.)
+ */
+const PUBLIC_FILE_PATH = /\.(.*)$/;
 
+/**
+ * Rutas públicas SOLO para usuarios NO autenticados
+ * (si hay token → redirige)
+ */
 const publicRoutes = [
   "/login",
   "/register",
   "/forgot-password",
-  "/", // Home/Landing page (si aplica)
 ];
 
-// Rutas a las que solo puede acceder el administrador (Opcional, basado en el rol de tu proyecto)
-// const adminRoutes = ['/admin', '/admin/users', '/admin/settings'];
+/**
+ * Rutas SIEMPRE públicas
+ * (nunca redirigen, exista token o no)
+ */
+const alwaysPublicRoutes = [
+  "/landingpage",
+  '/purchase',
+  '/purchase/callback'
+];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // 1. Omitir archivos estáticos y rutas especiales de Next.js
+  /**
+   * 1. Omitir rutas internas de Next y archivos estáticos
+   */
   if (
-    pathname.includes("/_next") ||
-    pathname.includes("/api") ||
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/api") ||
     pathname === "/favicon.ico" ||
     PUBLIC_FILE_PATH.test(pathname)
   ) {
     return NextResponse.next();
   }
 
-  // 2. Verificar el token
-  // Usamos el nombre 'token' basado en donde lo guardamos en AuthLogin.tsx
-  const token = request.cookies.get("token");
-
-  // Nota: El backend emite un JWT que debe estar en el token
-
-  // 3. Lógica de Redirección
-
-  // A. Si el usuario intenta acceder a una ruta protegida (NO pública)
-  if (!publicRoutes.includes(pathname)) {
-    // Si no hay token, redirigir a Login
-    if (!token) {
-      const url = request.nextUrl.clone();
-      url.pathname = "/login";
-      return NextResponse.redirect(url);
-    }
-
-    // Si hay token, permitir el acceso a la ruta protegida
+  /**
+   * 2. Permitir rutas siempre públicas
+   */
+  if (alwaysPublicRoutes.includes(pathname)) {
     return NextResponse.next();
-
-    // Lógica para verificar rol (Si tuviéramos un JWT complejo o una API de validación de rol)
-    // if (adminRoutes.includes(pathname) && userRole !== 'Administrador') {
-    //    return NextResponse.redirect(new URL('/operational/tables', request.url));
-    // }
   }
 
-  // B. Si el usuario intenta acceder a /login o /register teniendo un token
-  if (publicRoutes.includes(pathname) && token) {
-    // Redirigir al área operativa (Plano de Mesas)
+  /**
+   * 3. Obtener token (JWT)
+   */
+  const token = request.cookies.get("token")?.value;
+
+  /**
+   * 4. Acceso a rutas públicas (login, register, etc.)
+   *    - Si hay token → redirigir a /local
+   */
+  if (publicRoutes.includes(pathname)) {
+    if (token) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/local";
+      return NextResponse.redirect(url);
+    }
+    return NextResponse.next();
+  }
+
+  /**
+   * 5. Rutas privadas
+   *    - Si NO hay token → redirigir a /login
+   */
+  if (!token) {
     const url = request.nextUrl.clone();
-    url.pathname = "/local";
+    url.pathname = "/landingpage";
     return NextResponse.redirect(url);
   }
 
-  // 4. Por defecto, permitir (ej. rutas públicas sin token)
+  /**
+   * 6. (Opcional) Validación de roles
+   * Ejemplo:
+   *
+   * const userRole = decodeJWT(token).role;
+   * if (adminRoutes.includes(pathname) && userRole !== "ADMIN") {
+   *   return NextResponse.redirect(new URL("/local", request.url));
+   * }
+   */
+
+  /**
+   * 7. Acceso permitido
+   */
   return NextResponse.next();
 }
 
-// 5. Configuración del Middleware (Opcional pero útil para performance)
+/**
+ * Configuración del matcher
+ */
 export const config = {
-  // Solo aplicar middleware a estas rutas
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
     "/((?!api|_next/static|_next/image|favicon.ico).*)",
   ],
 };

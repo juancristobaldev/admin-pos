@@ -36,7 +36,9 @@ export default function Register2() {
         >
           <Card elevation={9} sx={{ p: 4, zIndex: 1, width: '100%', maxWidth: '450px' }}>
             <Box display="flex" alignItems="center" justifyContent="center">
-              <Logo />
+            <Typography fontWeight={500}>
+                      EasyFlow
+                    </Typography>
             </Box>
             <AuthRegister
               subtext={

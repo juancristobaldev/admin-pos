@@ -29,9 +29,7 @@ export default function Dashboard() {
       <Box >
         <Grid container spacing={3}>
           {/* column */}
-          <Grid item xs={12} lg={12}>
-            <TopCards />
-          </Grid>
+
           {/* column */}
           <Grid item xs={12} lg={8}>
             <RevenueUpdates isLoading={isLoading} />

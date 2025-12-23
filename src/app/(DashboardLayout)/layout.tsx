@@ -43,7 +43,7 @@ export default function RootLayout({
 
   return (
     <MainWrapper>
-      <title>Modernize NextJs 14.0.3</title>
+      <title>Easy Flow</title>
       {/* ------------------------------------------- */}
       {/* Sidebar */}
       {/* ------------------------------------------- */}

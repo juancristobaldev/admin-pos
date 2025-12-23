@@ -67,17 +67,8 @@ const featuresData: FeaturesType[] = [
     subtext:
       "Crea usuarios, asigna áreas y administra tu equipo desde un panel seguro.",
   },
-  {
-    icon: <IconDiamond width={40} height={40} strokeWidth={1.5} />,
-    title: "PWA Instalable",
-    subtext:
-      "Funciona como app nativa en tablet, celular y computador sin depender de stores.",
-  },
-  {
-    icon: <IconDatabase width={40} height={40} strokeWidth={1.5} />,
-    title: "Sincronización Automática",
-    subtext: "Los pedidos se envían al servidor local apenas vuelve la red.",
-  },
+
+
   {
     icon: <IconLanguageKatakana width={40} height={40} strokeWidth={1.5} />,
     title: "Multidispositivo",
@@ -113,17 +104,8 @@ const featuresData: FeaturesType[] = [
     subtext:
       "Mejoras y nuevas funciones basadas en el uso real de los restaurantes.",
   },
-  {
-    icon: <IconBook width={40} height={40} strokeWidth={1.5} />,
-    title: "Documentación Clara",
-    subtext:
-      "Guías simples para que implementes y configures sin complicaciones.",
-  },
-  {
-    icon: <IconCalendar width={40} height={40} strokeWidth={1.5} />,
-    title: "Control por Turnos",
-    subtext: "Ideal para administrar horarios, aperturas y cierres de jornada.",
-  },
+
+ 
   {
     icon: <IconMessages width={40} height={40} strokeWidth={1.5} />,
     title: "Soporte Directo",

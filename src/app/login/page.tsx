@@ -28,39 +28,12 @@ export default function Login() {
         >
           <Box p={4}>
             <AuthLogin
-              title="Bienvenido a Modernize"
+              title="Bienvenido a Easy Flow"
               subtext={
-                <Typography
-                  className="text-center"
-                  variant="subtitle1"
-                  color="textSecondary"
-                  mb={1}
-                >
-                  Sección Administrador
-                </Typography>
+             <></>
               }
               subtitle={
-                <Stack direction="row" spacing={1} mt={3}>
-                  <Typography
-                    className="text-center"
-                    color="textSecondary"
-                    variant="h6"
-                    fontWeight="500"
-                  >
-                    ¿Eres nuevo?
-                  </Typography>
-                  <Typography
-                    component={Link}
-                    href="/register"
-                    fontWeight="500"
-                    sx={{
-                      textDecoration: "none",
-                      color: "primary.main",
-                    }}
-                  >
-                    Crear una cuenta
-                  </Typography>
-                </Stack>
+                <></>
               }
             />
           </Box>

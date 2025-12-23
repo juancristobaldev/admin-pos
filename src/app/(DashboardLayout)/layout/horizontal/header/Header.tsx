@@ -46,7 +46,9 @@ const Header = () => {
         }}
       >
         <Box sx={{ width: lgDown ? '45px' : 'auto', overflow: 'hidden' }}>
-          <Logo />
+        <Typography fontWeight={500}>
+                      EasyFlow
+                    </Typography>
         </Box>
         {/* ------------------------------------------- */}
         {/* Toggle Button Sidebar */}
@@ -73,12 +75,14 @@ const Header = () => {
         ) : null}
         <Box flexGrow={1} />
         <Stack spacing={1} direction="row" alignItems="center">
-          <Language />
+          {/*   <Language /> */}
           {/* ------------------------------------------- */}
           {/* Ecommerce Dropdown */}
           {/* ------------------------------------------- */}
-          <Cart />
+          {/*
+              <Cart />
           <Notifications />
+          */}
           <Profile />
         </Stack>
       </ToolbarStyled>

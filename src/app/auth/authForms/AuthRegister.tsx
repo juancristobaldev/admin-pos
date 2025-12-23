@@ -1,37 +1,47 @@
-import { Box, Typography, Button, Divider, ButtonBase } from "@mui/material";
-import Link from "next/link";
+import { Box, Typography, Button } from "@mui/material";
 import CustomTextField from "@/app/components/forms/theme-elements/CustomTextField";
 import CustomFormLabel from "@/app/components/forms/theme-elements/CustomFormLabel";
-import { Stack } from "@mui/system";
 import { registerType } from "@/app/(DashboardLayout)/types/auth/auth";
-import AuthSocialButtons from "./AuthSocialButtons";
 import { gql, useMutation } from "@apollo/client";
 import { useFormik } from "formik";
-
 import * as Yup from "yup";
+import { useRouter, useSearchParams } from "next/navigation";
 
+/* ============================
+   VALIDACIÓN
+============================ */
 export const createClientSchema = Yup.object({
   name: Yup.string().required("El nombre es obligatorio"),
-  email: Yup.string()
-    .email("Correo inválido")
-    .required("El correo es obligatorio"),
   password: Yup.string()
     .min(6, "Mínimo 6 caracteres")
     .required("La contraseña es obligatoria"),
 });
 
+/* ============================
+   MUTATION
+============================ */
 export const CREATE_CLIENT = gql`
   mutation CreateClient($input: CreateClientInput!) {
     createClient(input: $input) {
-      id
-      name
-      email
+      success
+      errors
+      client {
+        id
+        name
+        email
+      }
     }
   }
 `;
 
 const AuthRegister = ({ title, subtitle, subtext }: registerType) => {
-  const [createClient] = useMutation(CREATE_CLIENT);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const emailFromUrl = searchParams.get("email") || "";
+  const saleToken = searchParams.get("saleToken") || "";
+
+  const [createClient, { loading }] = useMutation(CREATE_CLIENT);
 
   const {
     values,
@@ -40,51 +50,52 @@ const AuthRegister = ({ title, subtitle, subtext }: registerType) => {
     handleChange,
     handleBlur,
     handleSubmit,
-    isSubmitting,
   } = useFormik({
     initialValues: {
       name: "",
-      email: "",
+      email: emailFromUrl,
       password: "",
     },
     validationSchema: createClientSchema,
     onSubmit: async (form) => {
-      await createClient({
-        variables: {
-          input: form,
-        },
-      });
+      try {
+        const { data } = await createClient({
+          variables: {
+            input: {
+              name: form.name,
+              email: form.email,
+              password: form.password,
+              saleToken,
+            },
+    
+          },
+        });
 
-      console.log("Cliente creado:", form);
+        const result = data?.createClient;
+
+        if (!result?.success) {
+          alert(result?.errors || "Error al crear usuario");
+          return;
+        }
+
+        alert("Cuenta creada correctamente");
+        router.push("/login");
+      } catch (e) {
+        console.error(e);
+        alert("Error inesperado");
+      }
     },
   });
 
   return (
     <>
-      {title ? (
+      {title && (
         <Typography fontWeight="700" variant="h3" mb={1}>
           {title}
         </Typography>
-      ) : null}
+      )}
 
       {subtext}
-      {/**    <AuthSocialButtons title="Sign up with" />
-     *  <Box mt={3}>
-      <Divider>
-        <Typography
-          component="span"
-          color="textSecondary"
-          variant="h6"
-          fontWeight="400"
-          position="relative"
-          px={2}
-        >
-          or sign up with
-        </Typography>
-      </Divider>
-    </Box>
-
-     */}
 
       <Box>
         <CustomFormLabel htmlFor="name">Nombre completo</CustomFormLabel>
@@ -94,11 +105,10 @@ const AuthRegister = ({ title, subtitle, subtext }: registerType) => {
           value={values.name}
           onChange={handleChange}
           onBlur={handleBlur}
-          variant="outlined"
           fullWidth
         />
         {touched.name && errors.name && (
-          <p style={{ color: "red", marginTop: 4 }}>{errors.name}</p>
+          <p style={{ color: "red" }}>{errors.name}</p>
         )}
 
         <CustomFormLabel htmlFor="email">Correo electrónico</CustomFormLabel>
@@ -106,14 +116,9 @@ const AuthRegister = ({ title, subtitle, subtext }: registerType) => {
           id="email"
           name="email"
           value={values.email}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          variant="outlined"
+          disabled
           fullWidth
         />
-        {touched.email && errors.email && (
-          <p style={{ color: "red", marginTop: 4 }}>{errors.email}</p>
-        )}
 
         <CustomFormLabel htmlFor="password">Contraseña</CustomFormLabel>
         <CustomTextField
@@ -123,11 +128,10 @@ const AuthRegister = ({ title, subtitle, subtext }: registerType) => {
           value={values.password}
           onChange={handleChange}
           onBlur={handleBlur}
-          variant="outlined"
           fullWidth
         />
         {touched.password && errors.password && (
-          <p style={{ color: "red", marginTop: 4 }}>{errors.password}</p>
+          <p style={{ color: "red" }}>{errors.password}</p>
         )}
 
         <Button
@@ -135,13 +139,16 @@ const AuthRegister = ({ title, subtitle, subtext }: registerType) => {
           variant="contained"
           size="large"
           fullWidth
+          disabled={loading}
           onClick={() => handleSubmit()}
         >
           Registrarse
         </Button>
       </Box>
+
       {subtitle}
     </>
   );
 };
+
 export default AuthRegister;

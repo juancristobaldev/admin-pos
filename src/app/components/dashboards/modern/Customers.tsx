@@ -6,18 +6,20 @@ import { IconArrowDownRight } from '@tabler/icons-react';
 import DashboardCard from '../../shared/DashboardCard';
 import SkeletonCustomersCard from "../skeleton/CustomersCard";
 
+// 1. DEFINICIÓN DE PROPS: Agregamos 'count'
 interface CustomersCardProps {
   isLoading: boolean;
+  count?: number; 
 }
 
-const Customers = ({ isLoading }: CustomersCardProps) => {
+const Customers = ({ isLoading, count = 0 }: CustomersCardProps) => {
   // chart color
   const theme = useTheme();
   const secondary = theme.palette.secondary.main;
   const secondarylight = theme.palette.secondary.light;
   const errorlight = theme.palette.error.light;
 
-  // chart
+  // chart config
   const optionscolumnchart: any = {
     chart: {
       type: 'area',
@@ -55,7 +57,7 @@ const Customers = ({ isLoading }: CustomersCardProps) => {
     {
       name: '',
       color: secondary,
-      data: [30, 25, 35, 20, 30, 40],
+      data: [30, 25, 35, 20, 30, 40], // Datos estéticos
     },
   ];
 
@@ -82,9 +84,11 @@ const Customers = ({ isLoading }: CustomersCardProps) => {
           >
             <>
               <Typography variant="subtitle2" color="textSecondary">
-                Customers
+                Usuarios Activos
               </Typography>
-              <Typography variant="h4">36,358</Typography>
+              {/* 2. USO DEL PROP REAL */}
+              <Typography variant="h4">{count}</Typography>
+              
               <Stack direction="row" spacing={1} mt={1} alignItems="center">
                 <Avatar sx={{ bgcolor: errorlight, width: 24, height: 24 }}>
                   <IconArrowDownRight width={18} color="#FA896B" />
