@@ -9,7 +9,7 @@ import { useClientContext } from "@/store/me";
 
 const AppDD = () => {
   const [anchorEl2, setAnchorEl2] = useState(null);
-  const {client} = useClientContext()
+  const { client } = useClientContext();
   const handleClick2 = (event: any) => {
     setAnchorEl2(event.currentTarget);
   };
@@ -20,7 +20,7 @@ const AppDD = () => {
 
   const pathname = usePathname();
 
-  const params = useParams<{ idLocal: string }>()
+  const params = useParams<{ idLocal: string }>();
 
   console.log(params.idLocal);
   const businessMenu = [
@@ -51,8 +51,6 @@ const AppDD = () => {
     },
   ];
 
-
-
   // const localsMenu = map de locales
 
   if (pathname.includes("/local/"))
@@ -68,20 +66,24 @@ const AppDD = () => {
         {item.title}
       </Button>
     ));
-
-  else if(pathname.includes('/admin'))     return client?.businesses?.map((item, index) => (
-    <Button
-      key={index}
-      color="primary"
-      sx={{ color: (theme) => theme.palette.text.secondary }}
-      variant="text"
-      href={`${pathname}?businessId=${item.id}`}
-      component={Link}
-    >
-      {item.name}
-    </Button>
-  ));
- };
+  else if (pathname.includes("/admin"))
+    return client?.businesses?.map((item, index) => (
+      <Button
+        key={index}
+        color="primary"
+        style={{
+          marginLeft: "10px",
+          marginRight: "10px",
+        }}
+        sx={{ color: (theme) => theme.palette.text.secondary }}
+        variant="text"
+        href={`${pathname}?businessId=${item.id}`}
+        component={Link}
+      >
+        {item.name}
+      </Button>
+    ));
+};
 /*
 
         <Menu

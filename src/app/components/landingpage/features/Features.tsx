@@ -38,12 +38,7 @@ const featuresData: FeaturesType[] = [
     subtext:
       "Organiza el salón arrastrando mesas y ajustando la distribución en segundos.",
   },
-  {
-    icon: <IconArchive width={40} height={40} strokeWidth={1.5} />,
-    title: "100% Offline-First",
-    subtext:
-      "Funciona sin internet. Los pedidos se guardan y sincronizan automáticamente.",
-  },
+
   {
     icon: <IconAdjustments width={40} height={40} strokeWidth={1.5} />,
     title: "Toma de Pedidos Rápida",
@@ -67,7 +62,6 @@ const featuresData: FeaturesType[] = [
     subtext:
       "Crea usuarios, asigna áreas y administra tu equipo desde un panel seguro.",
   },
-
 
   {
     icon: <IconLanguageKatakana width={40} height={40} strokeWidth={1.5} />,
@@ -105,7 +99,6 @@ const featuresData: FeaturesType[] = [
       "Mejoras y nuevas funciones basadas en el uso real de los restaurantes.",
   },
 
- 
   {
     icon: <IconMessages width={40} height={40} strokeWidth={1.5} />,
     title: "Soporte Directo",

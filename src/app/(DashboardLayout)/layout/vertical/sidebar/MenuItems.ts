@@ -64,6 +64,8 @@ import {
   IconBorderStyle2,
   IconLockAccess,
   IconAppWindow,
+  IconEyeDollar,
+  IconUser,
 } from "@tabler/icons-react";
 
 const Menuitems: MenuitemsType[] = [
@@ -82,7 +84,7 @@ const Menuitems: MenuitemsType[] = [
   {
     id: uniqueId(),
     title: "Ventas",
-    icon: IconAperture,
+    icon: IconEyeDollar,
     href: "/admin/sales",
 
     chipColor: "secondary",
@@ -90,7 +92,7 @@ const Menuitems: MenuitemsType[] = [
   {
     id: uniqueId(),
     title: "Empleados",
-    icon: IconAperture,
+    icon: IconUser,
     href: "/admin/employees",
 
     chipColor: "secondary",
@@ -98,28 +100,8 @@ const Menuitems: MenuitemsType[] = [
   {
     id: uniqueId(),
     title: "Inventario",
-    icon: IconAperture,
+    icon: IconBox,
     href: "/admin/inventory",
-
-    chipColor: "secondary",
-  },
-  {
-    navlabel: true,
-    subheader: "Clientes",
-  },
-  {
-    id: uniqueId(),
-    title: "Criticas",
-    icon: IconAperture,
-    href: "/clients/reviews",
-
-    chipColor: "secondary",
-  },
-  {
-    id: uniqueId(),
-    title: "Emails",
-    icon: IconAperture,
-    href: "/clients/emails",
 
     chipColor: "secondary",
   },
